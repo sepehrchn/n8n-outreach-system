@@ -9,6 +9,7 @@
         "emailFormat": "text",
         "text": "={{ $json.body.email_body }}",
         "options": {
+          "appendAttribution": false,
           "replyTo": "sepehrjokanian99@gmail.com"
         }
       },
@@ -139,7 +140,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "221f5825-47cf-4e54-b6fa-4826857a7327",
+  "versionId": "d536e0cb-de2d-4863-b560-e3700a8f1895",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c2564247207ead1448da1929b90dbca73f34c806aef60f59c655405a7f6ea078"
