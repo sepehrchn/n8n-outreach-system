@@ -1,0 +1,389 @@
+{
+  "updatedAt": "2026-06-14T12:50:39.249Z",
+  "createdAt": "2026-06-14T12:46:01.171Z",
+  "id": "UyfZHlFmwCCFdiAY",
+  "name": "Outreach - Send Email",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "fromEmail": "gigili2454@gmail.com",
+        "toEmail": "={{ $json.body.to_email }}",
+        "subject": "={{ $json.body.subject }}",
+        "emailFormat": "text",
+        "text": "={{ $json.body.email_body }}\n\nSepehr\n",
+        "options": {
+          "replyTo": "gigili2454@gmail.com"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2224,
+        0
+      ],
+      "id": "00ccb8d7-b45f-4b59-bca4-00fa116f704a",
+      "name": "Send an Email",
+      "webhookId": "2dd17ae2-38d9-480e-a147-e307d3b6cfa7",
+      "credentials": {
+        "smtp": {
+          "id": "ZjYE4QqdcKaV1lk9",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send-email",
+        "responseMode": "responseNode",
+        "options": {
+          "onlyData": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        2016,
+        0
+      ],
+      "id": "49f3752c-07fe-4b4b-8dde-ed9d455d2267",
+      "name": "Send Email Webhook",
+      "webhookId": "0c50d7af-52d0-4b27-a9d5-5a904bb70edb"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://script.google.com/macros/s/AKfycbwVW71hy8JtfhSfH7uGxbqCOidDZGQ_8Wqo8KcGVkguJp75Skc0KGiGi2xCXo0HHH7u/exec",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "date",
+              "value": "={{ $now.format('yyyy-MM-dd') }}"
+            },
+            {
+              "name": "company",
+              "value": "={{ $('Send Email Webhook').item.json.body.company }}"
+            },
+            {
+              "name": "contact_name",
+              "value": "={{ $('Send Email Webhook').item.json.body.contact_name }}"
+            },
+            {
+              "name": "contact_email",
+              "value": "={{ $('Send Email Webhook').item.json.body.to_email }}"
+            },
+            {
+              "name": "contact_role",
+              "value": "={{ $('Send Email Webhook').item.json.body.contact_role }}"
+            },
+            {
+              "name": "subject",
+              "value": "={{ $('Send Email Webhook').item.json.body.subject }}"
+            },
+            {
+              "name": "email_body",
+              "value": "={{ $('Send Email Webhook').item.json.body.email_body }}"
+            },
+            {
+              "name": "status",
+              "value": "Sent"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2432,
+        0
+      ],
+      "id": "58e5c714-240c-430b-a037-9b2a2fcaa893",
+      "name": "Log Sent 2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Email sent successfully\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2640,
+        0
+      ],
+      "id": "b57ca268-2d07-4eb4-af9a-fb9c387a65fb",
+      "name": "Respond Success"
+    }
+  ],
+  "connections": {
+    "Send Email Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an Email": {
+      "main": [
+        [
+          {
+            "node": "Log Sent 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Sent 2": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c2564247207ead1448da1929b90dbca73f34c806aef60f59c655405a7f6ea078"
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "90ad37d7-c607-42c0-bd0a-1bbdb98d1a5b",
+  "activeVersionId": "90ad37d7-c607-42c0-bd0a-1bbdb98d1a5b",
+  "versionCounter": 2,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "shared": [
+    {
+      "updatedAt": "2026-06-14T12:46:01.173Z",
+      "createdAt": "2026-06-14T12:46:01.173Z",
+      "role": "workflow:owner",
+      "workflowId": "UyfZHlFmwCCFdiAY",
+      "projectId": "BOuLLPhVowGg9N6p",
+      "project": {
+        "updatedAt": "2026-06-11T08:49:47.406Z",
+        "createdAt": "2026-06-11T08:40:01.706Z",
+        "id": "BOuLLPhVowGg9N6p",
+        "name": "Sepehr Jo <sepehrjokanian99@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "a4af9d3f-8368-49de-b2ce-c5ef91622d6c"
+      }
+    }
+  ],
+  "tags": [],
+  "parentFolder": null,
+  "activeVersion": {
+    "updatedAt": "2026-06-14T12:50:39.250Z",
+    "createdAt": "2026-06-14T12:50:39.250Z",
+    "versionId": "90ad37d7-c607-42c0-bd0a-1bbdb98d1a5b",
+    "workflowId": "UyfZHlFmwCCFdiAY",
+    "nodes": [
+      {
+        "parameters": {
+          "fromEmail": "gigili2454@gmail.com",
+          "toEmail": "={{ $json.body.to_email }}",
+          "subject": "={{ $json.body.subject }}",
+          "emailFormat": "text",
+          "text": "={{ $json.body.email_body }}\n\nSepehr\n",
+          "options": {
+            "replyTo": "gigili2454@gmail.com"
+          }
+        },
+        "type": "n8n-nodes-base.emailSend",
+        "typeVersion": 2.1,
+        "position": [
+          2224,
+          0
+        ],
+        "id": "00ccb8d7-b45f-4b59-bca4-00fa116f704a",
+        "name": "Send an Email",
+        "webhookId": "2dd17ae2-38d9-480e-a147-e307d3b6cfa7",
+        "credentials": {
+          "smtp": {
+            "id": "ZjYE4QqdcKaV1lk9",
+            "name": "SMTP account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "send-email",
+          "responseMode": "responseNode",
+          "options": {
+            "onlyData": true
+          }
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          2016,
+          0
+        ],
+        "id": "49f3752c-07fe-4b4b-8dde-ed9d455d2267",
+        "name": "Send Email Webhook",
+        "webhookId": "0c50d7af-52d0-4b27-a9d5-5a904bb70edb"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://script.google.com/macros/s/AKfycbwVW71hy8JtfhSfH7uGxbqCOidDZGQ_8Wqo8KcGVkguJp75Skc0KGiGi2xCXo0HHH7u/exec",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "date",
+                "value": "={{ $now.format('yyyy-MM-dd') }}"
+              },
+              {
+                "name": "company",
+                "value": "={{ $('Send Email Webhook').item.json.body.company }}"
+              },
+              {
+                "name": "contact_name",
+                "value": "={{ $('Send Email Webhook').item.json.body.contact_name }}"
+              },
+              {
+                "name": "contact_email",
+                "value": "={{ $('Send Email Webhook').item.json.body.to_email }}"
+              },
+              {
+                "name": "contact_role",
+                "value": "={{ $('Send Email Webhook').item.json.body.contact_role }}"
+              },
+              {
+                "name": "subject",
+                "value": "={{ $('Send Email Webhook').item.json.body.subject }}"
+              },
+              {
+                "name": "email_body",
+                "value": "={{ $('Send Email Webhook').item.json.body.email_body }}"
+              },
+              {
+                "name": "status",
+                "value": "Sent"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          2432,
+          0
+        ],
+        "id": "58e5c714-240c-430b-a037-9b2a2fcaa893",
+        "name": "Log Sent 2"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={\n  \"success\": true,\n  \"message\": \"Email sent successfully\"\n}\n",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.5,
+        "position": [
+          2640,
+          0
+        ],
+        "id": "b57ca268-2d07-4eb4-af9a-fb9c387a65fb",
+        "name": "Respond Success"
+      }
+    ],
+    "connections": {
+      "Send Email Webhook": {
+        "main": [
+          [
+            {
+              "node": "Send an Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send an Email": {
+        "main": [
+          [
+            {
+              "node": "Log Sent 2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Log Sent 2": {
+        "main": [
+          [
+            {
+              "node": "Respond Success",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "Sepehr Jo",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-06-14T12:51:46.480Z",
+        "id": 34,
+        "workflowId": "UyfZHlFmwCCFdiAY",
+        "versionId": "90ad37d7-c607-42c0-bd0a-1bbdb98d1a5b",
+        "event": "activated",
+        "userId": "a4af9d3f-8368-49de-b2ce-c5ef91622d6c"
+      }
+    ]
+  },
+  "scopes": [
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "checksum": "455b2d369c5b25d00eaad3c1819bcad698e21586c05d00c4ff1a7761e7de58aa"
+}
