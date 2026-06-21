@@ -147,18 +147,22 @@
     },
     {
       "parameters": {
-        "url": "={{ $json.website }}",
+        "url": "=https://r.jina.ai/{{ $json.website }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "User-Agent",
               "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+            },
+            {
+              "name": "x-engine",
+              "value": "browser"
             }
           ]
         },
         "options": {
-          "timeout": 10000
+          "timeout": 20000
         }
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -173,51 +177,13 @@
     },
     {
       "parameters": {
-        "operation": "extractHtmlContent",
-        "extractionValues": {
-          "values": [
-            {
-              "key": "page_title",
-              "cssSelector": "title"
-            },
-            {
-              "key": "meta_desc",
-              "cssSelector": "meta[name=\"description\"]",
-              "returnValue": "attribute",
-              "attribute": "content"
-            },
-            {
-              "key": "headings",
-              "cssSelector": "h1, h2, h3",
-              "returnArray": true
-            },
-            {
-              "key": "paragraphs",
-              "cssSelector": "p, li",
-              "returnArray": true
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.html",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        -64
-      ],
-      "id": "18e0a35c-0241-4f7c-a007-0cafc093c0df",
-      "name": "Extract Page Text"
-    },
-    {
-      "parameters": {
-        "jsCode": "const j = $input.first().json;\nconst parts = [\n  'TITLE: ' + (j.page_title || ''),\n  'META: ' + (j.meta_desc || ''),\n  'HEADINGS: ' + (j.headings || []).join(' | '),\n  'TEXT: ' + (j.paragraphs || []).join('\\n')\n];\nconst text = parts.join('\\n\\n').replace(/[\\t ]+/g, ' ').trim();\nreturn [{ json: { site_text: text.slice(0, 8000), text_length: text.length } }];\n"
+        "jsCode": "const j = $input.first().json;\nconst raw = (j.data || j.text || '').toString();\nconst text = raw.replace(/[\\t ]+/g, ' ').trim();\nreturn [{ json: { site_text: text.slice(0, 8000), text_length: text.length } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        160,
-        -48
+        96,
+        -32
       ],
       "id": "2e0149b9-db38-4e7c-afb9-4ec4633f4e67",
       "name": "Build Research Text"
@@ -518,7 +484,7 @@
       "main": [
         [
           {
-            "node": "Extract Page Text",
+            "node": "Build Research Text",
             "type": "main",
             "index": 0
           }
@@ -566,17 +532,6 @@
         [
           {
             "node": "Format Output",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Page Text": {
-      "main": [
-        [
-          {
-            "node": "Build Research Text",
             "type": "main",
             "index": 0
           }
@@ -663,7 +618,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "21f11405-faa3-4893-bec4-09444f74ddb0",
+  "versionId": "68f351b1-8abf-4beb-8813-a7d9d9fa5786",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c2564247207ead1448da1929b90dbca73f34c806aef60f59c655405a7f6ea078"
