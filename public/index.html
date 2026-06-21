@@ -616,9 +616,9 @@ Sepehr</div>
  
         stopStatusAnimation();
  
-        if (!data.email_body && !data.subject_line) {
-          throw new Error('Workflow returned an empty draft. The website may have been unscrapable — try adding a different URL.');
-        }
+        if (data.error || (!data.email_body && !data.subject_line)) {
+         throw new Error(data.message || 'Workflow returned an empty draft. The website may have been unscrapable — try adding a different URL.');
+         }
  
         // Store draft data
         draftData = data;
