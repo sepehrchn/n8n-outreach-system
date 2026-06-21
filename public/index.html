@@ -33,29 +33,29 @@
       background-size: 32px 32px;
     }
     .mermaid { background: transparent; }
-
+ 
     /* Step transitions */
     .step-panel { display: none; }
     .step-panel.active { display: block; }
-
+ 
     /* Slide-in animation */
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     .slide-in { animation: slideIn 0.3s ease forwards; }
-
+ 
     /* Pulse dot */
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
     .pulse-dot { animation: pulse 1.5s ease-in-out infinite; }
-
+ 
     /* Textarea clean */
     textarea { resize: vertical; }
     textarea:focus { outline: none; }
   </style>
 </head>
 <body class="bg-neutral-950 text-neutral-100 antialiased">
-
+ 
   <!-- Nav -->
   <nav class="sticky top-0 z-40 backdrop-blur bg-neutral-950/80 border-b border-neutral-900">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -68,7 +68,7 @@
       </div>
     </div>
   </nav>
-
+ 
   <!-- Hero -->
   <header id="top" class="relative grid-bg">
     <div class="max-w-6xl mx-auto px-6 pt-20 pb-24">
@@ -93,7 +93,7 @@
           See how it works
         </a>
       </div>
-
+ 
       <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-neutral-900 border border-neutral-900 rounded-xl overflow-hidden">
         <div class="bg-neutral-950 p-5"><div class="text-2xl font-semibold">16</div><div class="text-xs text-neutral-500 mt-1">n8n nodes</div></div>
         <div class="bg-neutral-950 p-5"><div class="text-2xl font-semibold">~25s</div><div class="text-xs text-neutral-500 mt-1">per email draft</div></div>
@@ -102,7 +102,7 @@
       </div>
     </div>
   </header>
-
+ 
   <!-- Workflow diagram -->
   <section id="workflow" class="border-t border-neutral-900">
     <div class="max-w-6xl mx-auto px-6 py-20">
@@ -133,7 +133,7 @@ flowchart TD
     O --> P[Send Email]
     P --> Q[Log Sent]
     Q --> R[Respond Success]
-
+ 
     classDef agent fill:#1e293b,stroke:#3b82f6,color:#e2e8f0
     classDef gate fill:#1f2937,stroke:#f59e0b,color:#fde68a
     classDef sink fill:#1f2937,stroke:#ef4444,color:#fecaca
@@ -152,7 +152,7 @@ flowchart TD
       </div>
     </div>
   </section>
-
+ 
   <!-- Tech stack -->
   <section class="border-t border-neutral-900">
     <div class="max-w-6xl mx-auto px-6 py-20">
@@ -192,7 +192,7 @@ flowchart TD
       </div>
     </div>
   </section>
-
+ 
   <!-- Sample output -->
   <section id="sample" class="border-t border-neutral-900">
     <div class="max-w-6xl mx-auto px-6 py-20">
@@ -212,20 +212,19 @@ flowchart TD
             <div>Subject</div><div class="text-neutral-200">Dev support for your Yerevan client work</div>
           </div>
           <hr class="border-neutral-900" />
-          <div class="text-neutral-200 leading-relaxed whitespace-pre-line">Nova Hotel project on Behance was a clean piece of work — the layout holds together across every touchpoint and that's hard to build for if your developer doesn't understand the design intent. I'm Sepehr, a full-stack developer based here in Yerevan.
-
-I build for design studios on a white-label basis, fixed scope, fixed price, your client never knows I'm involved. If a build lands on your desk and your team doesn't have bandwidth, I'd like to be the first call.</div>
-          <div class="pt-2 text-neutral-500 text-xs border-t border-neutral-900">
-            -- <br>
-            Sepehr Jokanian<br>
-            Full-stack developer · Yerevan, Armenia<br>
-            sep-web.pages.dev
-          </div>
+          <div class="text-neutral-200 leading-relaxed whitespace-pre-line">Hi Hovig,
+ 
+Saw the Nova Hotel project on Behance, the way the layout holds together across every touchpoint is the kind of attention to detail that's hard to build for if your developer doesn't understand the design intent. I'm Sepehr, a full-stack developer based here in Yerevan, working with design studios on a white-label basis, fixed price, clean code, your client never knows I'm involved.
+ 
+Some of my recent work is at sep-web.pages.dev if you want a quick look. If a build lands on your desk and your team doesn't have the bandwidth, I'd like to be the first email you send.
+ 
+Best,
+Sepehr</div>
         </div>
       </div>
     </div>
   </section>
-
+ 
   <!-- ═══════════════════════════════════════════════════════════════════════
        TRY IT — three-step inline flow
   ════════════════════════════════════════════════════════════════════════ -->
@@ -234,7 +233,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
       <p class="text-sm uppercase tracking-widest text-neutral-500">Try it</p>
       <h2 class="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">Submit a lead.</h2>
       <p class="mt-4 text-neutral-400">The workflow runs, generates a personalised email draft, and shows it here for you to review and edit before sending.</p>
-
+ 
       <!-- Step indicator -->
       <div class="mt-10 flex items-center gap-3 mb-8" id="stepIndicator">
         <div class="step-dot flex items-center gap-2 text-sm" data-step="1">
@@ -252,7 +251,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           <span class="text-neutral-500 step-label-3">Sent</span>
         </div>
       </div>
-
+ 
       <!-- ── STEP 1: Input form ──────────────────────────────────────────── -->
       <div id="step1" class="step-panel active">
         <form id="leadForm" class="space-y-5">
@@ -288,7 +287,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
                    class="mt-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition"
                    placeholder="hovig@studio.com" />
           </div>
-
+ 
           <button type="submit" id="submitBtn"
                   class="inline-flex items-center justify-center gap-2 w-full rounded-md bg-white text-neutral-950 px-5 py-3 font-medium hover:bg-neutral-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
             <span id="submitText">Generate email draft</span>
@@ -299,7 +298,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           </button>
           <div id="step1Error" class="hidden rounded-md border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-300"></div>
         </form>
-
+ 
         <!-- Processing status -->
         <div id="processingStatus" class="hidden mt-6 rounded-xl border border-neutral-800 bg-neutral-900 p-5">
           <div class="flex items-center gap-3 mb-4">
@@ -329,7 +328,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           </div>
         </div>
       </div>
-
+ 
       <!-- ── STEP 2: Review form ─────────────────────────────────────────── -->
       <div id="step2" class="step-panel">
         <div class="slide-in">
@@ -337,17 +336,17 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           <div class="flex items-center justify-between mb-6">
             <div>
               <h3 class="text-lg font-semibold text-neutral-100">Review the email draft</h3>
-              <p class="text-sm text-neutral-400 mt-1">Edit any field below before sending. The signature is added automatically.</p>
+              <p class="text-sm text-neutral-400 mt-1">Edit any field below before sending.</p>
             </div>
             <button onclick="resetToStep1()" class="text-xs text-neutral-500 hover:text-neutral-300 transition underline underline-offset-2">Start over</button>
           </div>
-
+ 
           <!-- Company badge -->
           <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs text-neutral-400">
             <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
             Generated for: <span id="reviewCompany" class="text-neutral-200 ml-1"></span>
           </div>
-
+ 
           <form id="reviewForm" class="space-y-4">
             <div>
               <label class="block text-xs font-medium text-neutral-500 uppercase tracking-widest mb-2">To</label>
@@ -364,24 +363,13 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
               <textarea id="reviewBody" rows="10"
                         class="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition text-sm font-mono leading-relaxed"></textarea>
             </div>
-
-            <!-- Signature preview -->
-            <div class="rounded-md border border-neutral-800 bg-neutral-950 px-4 py-3">
-              <div class="text-xs text-neutral-600 mb-2 uppercase tracking-widest">Signature (added automatically)</div>
-              <div class="text-sm text-neutral-400 font-mono leading-relaxed">
-                --<br>
-                Sepehr Jokanian<br>
-                Full-stack developer · Yerevan, Armenia<br>
-                sep-web.pages.dev
-              </div>
-            </div>
-
+ 
             <!-- Word count -->
             <div class="flex items-center justify-between text-xs text-neutral-600">
               <span>Word count: <span id="wordCount" class="text-neutral-400">0</span></span>
               <span id="wordCountWarning" class="hidden text-amber-400">Over 130 words — consider trimming</span>
             </div>
-
+ 
             <div class="flex gap-3 pt-2">
               <button type="submit" id="sendBtn"
                       class="flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-white text-neutral-950 px-5 py-3 font-medium hover:bg-neutral-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
@@ -400,7 +388,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           </form>
         </div>
       </div>
-
+ 
       <!-- ── STEP 3: Success ────────────────────────────────────────────── -->
       <div id="step3" class="step-panel">
         <div class="slide-in text-center py-10">
@@ -420,7 +408,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           </button>
         </div>
       </div>
-
+ 
       <details class="mt-10 rounded-xl border border-neutral-900 bg-neutral-950 p-5 text-sm text-neutral-400">
         <summary class="cursor-pointer text-neutral-200 font-medium">How does this work?</summary>
         <div class="mt-3 space-y-2">
@@ -439,7 +427,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
       </details>
     </div>
   </section>
-
+ 
   <!-- Footer -->
   <footer class="border-t border-neutral-900">
     <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
@@ -450,7 +438,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
       </div>
     </div>
   </footer>
-
+ 
   <script src="/config.js"></script>
   <script>
     // ── Mermaid ──────────────────────────────────────────────────────────
@@ -468,15 +456,15 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         fontFamily: 'Inter, system-ui, sans-serif',
       },
     });
-
+ 
     // ── State ─────────────────────────────────────────────────────────────
     let draftData = {};
-
+ 
     // ── Step management ───────────────────────────────────────────────────
     function goToStep(n) {
       document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
       document.getElementById('step' + n).classList.add('active');
-
+ 
       // Update step circles
       for (let i = 1; i <= 3; i++) {
         const circle = document.querySelector('.step-circle-' + i);
@@ -498,11 +486,11 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           if (label) { label.classList.add('text-neutral-500'); label.classList.remove('text-neutral-200'); }
         }
       }
-
+ 
       // Scroll to try section
       if (n > 1) document.getElementById('try').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-
+ 
     function resetToStep1() {
       document.getElementById('leadForm').reset();
       document.getElementById('step1Error').classList.add('hidden');
@@ -510,14 +498,14 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
       draftData = {};
       goToStep(1);
     }
-
+ 
     // ── Processing status animation ───────────────────────────────────────
     let statusInterval = null;
     function startStatusAnimation() {
       const steps = ['st1','st2','st3','st4'];
       let current = 0;
       const timings = [4000, 8000, 6000, 3000];
-
+ 
       function activateStep(i) {
         steps.forEach((id, idx) => {
           const el = document.getElementById(id);
@@ -534,7 +522,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
           }
         });
       }
-
+ 
       activateStep(0);
       let t = 0;
       statusInterval = setInterval(() => {
@@ -542,7 +530,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         activateStep(current);
       }, timings[t++] || 4000);
     }
-
+ 
     function stopStatusAnimation() {
       clearInterval(statusInterval);
       // Mark all green
@@ -554,30 +542,30 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         el.classList.add('text-neutral-400');
       });
     }
-
+ 
     // ── Word count ────────────────────────────────────────────────────────
     document.getElementById('reviewBody').addEventListener('input', function() {
       const words = this.value.trim().split(/\s+/).filter(Boolean).length;
       document.getElementById('wordCount').textContent = words;
       document.getElementById('wordCountWarning').classList.toggle('hidden', words <= 130);
     });
-
+ 
     // ── Copy draft ────────────────────────────────────────────────────────
     function copyDraft() {
       const subject = document.getElementById('reviewSubject').value;
       const body    = document.getElementById('reviewBody').value;
-      const text    = `Subject: ${subject}\n\n${body}\n\n--\nSepehr Jokanian\nFull-stack developer · Yerevan, Armenia\nsep-web.pages.dev`;
+      const text    = `Subject: ${subject}\n\n${body}`;
       navigator.clipboard.writeText(text).then(() => {
         const btn = document.getElementById('copyBtn');
         btn.textContent = 'Copied';
         setTimeout(() => btn.textContent = 'Copy', 2000);
       });
     }
-
+ 
     // ── STEP 1: Submit lead form ──────────────────────────────────────────
     document.getElementById('leadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
+ 
       const webhookUrl = window.WEBHOOK_URL;
       if (!webhookUrl || webhookUrl.includes('YOUR-N8N-HOST')) {
         const err = document.getElementById('step1Error');
@@ -585,7 +573,7 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         err.classList.remove('hidden');
         return;
       }
-
+ 
       // Build payload
       const payload = {
         'Company Name':  document.getElementById('companyName').value.trim(),
@@ -594,60 +582,60 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         'Contact Role':  document.getElementById('contactRole').value.trim(),
         'Contact Email': document.getElementById('contactEmail').value.trim(),
       };
-
+ 
       // UI: loading
       const submitBtn  = document.getElementById('submitBtn');
       const submitText = document.getElementById('submitText');
       const spinner    = document.getElementById('submitSpinner');
       const errBox     = document.getElementById('step1Error');
       const statusBox  = document.getElementById('processingStatus');
-
+ 
       submitBtn.disabled = true;
       submitText.textContent = 'Generating...';
       spinner.classList.remove('hidden');
       errBox.classList.add('hidden');
       statusBox.classList.remove('hidden');
       startStatusAnimation();
-
+ 
       try {
         const res = await fetch(webhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-
+ 
         // Parse response body regardless of status
         let data;
         try { data = await res.json(); } catch (_) { data = {}; }
-
+ 
         if (!res.ok) {
           // n8n returned a structured error (e.g. 422 from our failure branch)
           const msg = data.message || ('n8n responded with HTTP ' + res.status);
           throw new Error(msg);
         }
-
+ 
         stopStatusAnimation();
-
+ 
         if (!data.email_body && !data.subject_line) {
           throw new Error('Workflow returned an empty draft. The website may have been unscrapable — try adding a different URL.');
         }
-
+ 
         // Store draft data
         draftData = data;
-
+ 
         // Populate review form
         document.getElementById('reviewCompany').textContent  = payload['Company Name'];
         document.getElementById('reviewTo').value             = data.contact_email || payload['Contact Email'] || '';
         document.getElementById('reviewSubject').value        = data.subject_line  || '';
         document.getElementById('reviewBody').value           = data.email_body    || '';
-
+ 
         // Trigger word count
         const wc = (data.email_body || '').trim().split(/\s+/).filter(Boolean).length;
         document.getElementById('wordCount').textContent = wc;
         document.getElementById('wordCountWarning').classList.toggle('hidden', wc <= 130);
-
+ 
         goToStep(2);
-
+ 
       } catch (err) {
         stopStatusAnimation();
         statusBox.classList.add('hidden');
@@ -663,11 +651,11 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         spinner.classList.add('hidden');
       }
     });
-
+ 
     // ── STEP 2: Send confirmed email ──────────────────────────────────────
     document.getElementById('reviewForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-
+ 
       const sendUrl = window.SEND_EMAIL_URL;
       if (!sendUrl || sendUrl.includes('YOUR-N8N-HOST')) {
         const err = document.getElementById('step2Error');
@@ -675,18 +663,18 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         err.classList.remove('hidden');
         return;
       }
-
+ 
       const toEmail    = document.getElementById('reviewTo').value.trim();
       const subject    = document.getElementById('reviewSubject').value.trim();
       const emailBody  = document.getElementById('reviewBody').value.trim();
-
+ 
       if (!toEmail) {
         const err = document.getElementById('step2Error');
         err.textContent = 'Please enter a recipient email address.';
         err.classList.remove('hidden');
         return;
       }
-
+ 
       const payload = {
         to_email:     toEmail,
         subject:      subject,
@@ -695,29 +683,29 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
         contact_name: draftData.contact_name || '',
         contact_role: draftData.contact_role || '',
       };
-
+ 
       const sendBtn  = document.getElementById('sendBtn');
       const sendText = document.getElementById('sendText');
       const sendSpinner = document.getElementById('sendSpinner');
       const errBox   = document.getElementById('step2Error');
-
+ 
       sendBtn.disabled = true;
       sendText.textContent = 'Sending...';
       sendSpinner.classList.remove('hidden');
       errBox.classList.add('hidden');
-
+ 
       try {
         const res = await fetch(sendUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-
+ 
         if (!res.ok) throw new Error('Send webhook responded with HTTP ' + res.status);
-
+ 
         document.getElementById('sentTo').textContent = toEmail;
         goToStep(3);
-
+ 
       } catch (err) {
         errBox.textContent = 'Error sending: ' + err.message;
         errBox.classList.remove('hidden');
@@ -730,3 +718,8 @@ I build for design studios on a white-label basis, fixed scope, fixed price, you
   </script>
 </body>
 </html>
+
+
+
+
+
