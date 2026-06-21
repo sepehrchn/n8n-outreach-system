@@ -147,7 +147,7 @@
     },
     {
       "parameters": {
-        "url": "=https://r.jina.ai/{{ $json.website }}",
+        "url": "={{ $json.website }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -211,7 +211,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.first().json.body || $input.first().json.data || '';\nconst text = String(body).replace(/\\s+/g, ' ').trim();\nreturn [{ json: { site_text: text.slice(0, 8000), text_length: text.length } }];"
+        "jsCode": "const j = $input.first().json;\nconst parts = [\n  'TITLE: ' + (j.page_title || ''),\n  'META: ' + (j.meta_desc || ''),\n  'HEADINGS: ' + (j.headings || []).join(' | '),\n  'TEXT: ' + (j.paragraphs || []).join('\\n')\n];\nconst text = parts.join('\\n\\n').replace(/[\\t ]+/g, ' ').trim();\nreturn [{ json: { site_text: text.slice(0, 8000), text_length: text.length } }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -235,7 +235,7 @@
             {
               "id": "a8833edb-daa6-45bf-9399-69ea7f36a211",
               "leftValue": "={{ $json.text_length }}",
-              "rightValue": 150,
+              "rightValue": 500,
               "operator": {
                 "type": "number",
                 "operation": "gt"
@@ -663,7 +663,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "e9788dbc-340e-4d0a-a02a-cd0c4c245b63",
+  "versionId": "21f11405-faa3-4893-bec4-09444f74ddb0",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c2564247207ead1448da1929b90dbca73f34c806aef60f59c655405a7f6ea078"
