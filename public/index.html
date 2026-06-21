@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Outreach System · Sepehr Jokanian</title>
+  <meta name="description" content="An n8n workflow that researches companies and writes personalised cold outreach emails. Built by Sepehr Jokanian." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✉%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .mermaid { background: transparent; }
+ 
+    /* Step transitions */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+ 
+    /* Slide-in animation */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .slide-in { animation: slideIn 0.3s ease forwards; }
+ 
+    /* Pulse dot */
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .pulse-dot { animation: pulse 1.5s ease-in-out infinite; }
+ 
+    /* Textarea clean */
+    textarea { resize: vertical; }
+    textarea:focus { outline: none; }
+  </style>
+</head>
+<body class="bg-neutral-950 text-neutral-100 antialiased">
+ 
+  <!-- Nav -->
+  <nav class="sticky top-0 z-40 backdrop-blur bg-neutral-950/80 border-b border-neutral-900">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#top" class="font-semibold tracking-tight">AI Outreach · <span class="text-neutral-400">v5</span></a>
+      <div class="flex items-center gap-6 text-sm text-neutral-400">
+        <a href="#workflow" class="hover:text-white transition">Workflow</a>
+        <a href="#sample" class="hover:text-white transition">Sample</a>
+        <a href="#try" class="hover:text-white transition">Try it</a>
+        <a href="https://sep-web.pages.dev" target="_blank" rel="noopener" class="hover:text-white transition">Portfolio ↗</a>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- Hero -->
+  <header id="top" class="relative grid-bg">
+    <div class="max-w-6xl mx-auto px-6 pt-20 pb-24">
+      <div class="inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900/60 px-3 py-1 text-xs text-neutral-400 mb-6">
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+        Built with n8n · Gemini 2.5 Flash · $0/month
+      </div>
+      <h1 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
+        An AI workflow that<br />
+        <span class="text-neutral-400">researches and writes</span><br />
+        cold outreach emails.
+      </h1>
+      <p class="mt-6 text-lg text-neutral-400 max-w-2xl">
+        Enter a company name and website. The system scrapes their site, researches what they do, writes a personalised email in my voice, and lets me review it before sending. Every step is logged to Google Sheets.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a href="#try" class="inline-flex items-center gap-2 rounded-md bg-white text-neutral-950 px-5 py-3 font-medium hover:bg-neutral-200 transition">
+          Try the workflow
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"/></svg>
+        </a>
+        <a href="#workflow" class="inline-flex items-center gap-2 rounded-md border border-neutral-800 px-5 py-3 font-medium text-neutral-200 hover:bg-neutral-900 transition">
+          See how it works
+        </a>
+      </div>
+ 
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px bg-neutral-900 border border-neutral-900 rounded-xl overflow-hidden">
+        <div class="bg-neutral-950 p-5"><div class="text-2xl font-semibold">16</div><div class="text-xs text-neutral-500 mt-1">n8n nodes</div></div>
+        <div class="bg-neutral-950 p-5"><div class="text-2xl font-semibold">~25s</div><div class="text-xs text-neutral-500 mt-1">per email draft</div></div>
+        <div class="bg-neutral-950 p-5"><div class="text-2xl font-semibold">250</div><div class="text-xs text-neutral-500 mt-1">free Gemini req/day</div></div>
+        <div class="bg-neutral-950 p-5"><div class="text-2xl font-semibold">$0</div><div class="text-xs text-neutral-500 mt-1">monthly cost</div></div>
+      </div>
+    </div>
+  </header>
+ 
+  <!-- Workflow diagram -->
+  <section id="workflow" class="border-t border-neutral-900">
+    <div class="max-w-6xl mx-auto px-6 py-20">
+      <div class="max-w-2xl">
+        <p class="text-sm uppercase tracking-widest text-neutral-500">How it runs</p>
+        <h2 class="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">From a company name to a reviewed email.</h2>
+        <p class="mt-4 text-neutral-400">Two AI agents share one Gemini model. The first does research, the second writes the email. Two defensive branches catch bad data so a thin scrape or malformed JSON never produces a garbage email.</p>
+      </div>
+      <div class="mt-10 rounded-xl border border-neutral-900 bg-neutral-950 p-6 overflow-x-auto">
+        <div class="mermaid">
+flowchart TD
+    A[Webhook trigger] --> B[Lead Data]
+    B --> C[Fetch Homepage]
+    C -->|ok| D[Extract Page Text]
+    C -->|error| L[Log Manual Research]
+    D --> E[Build Research Text]
+    E --> F{Scrape OK?}
+    F -->|less than 500 chars| L
+    F -->|enough text| G[Research Agent]
+    G --> H[Parse Research]
+    H --> I{Research Valid?}
+    I -->|empty hook| L
+    I -->|valid| J[Email Writer]
+    J --> K[Format Output]
+    K --> M[Respond to Webhook]
+    M -->|JSON draft returned to website| N[Inline Review UI]
+    N -->|confirmed| O[Send Email Webhook]
+    O --> P[Send Email]
+    P --> Q[Log Sent]
+    Q --> R[Respond Success]
+ 
+    classDef agent fill:#1e293b,stroke:#3b82f6,color:#e2e8f0
+    classDef gate fill:#1f2937,stroke:#f59e0b,color:#fde68a
+    classDef sink fill:#1f2937,stroke:#ef4444,color:#fecaca
+    classDef human fill:#0f172a,stroke:#10b981,color:#a7f3d0
+    class G,J agent
+    class F,I gate
+    class L,Q sink
+    class N human
+        </div>
+      </div>
+      <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+        <div class="flex items-center gap-2 text-neutral-400"><span class="h-2 w-2 rounded-full bg-blue-400"></span>AI Agent</div>
+        <div class="flex items-center gap-2 text-neutral-400"><span class="h-2 w-2 rounded-full bg-amber-400"></span>Decision gate</div>
+        <div class="flex items-center gap-2 text-neutral-400"><span class="h-2 w-2 rounded-full bg-emerald-400"></span>Human review</div>
+        <div class="flex items-center gap-2 text-neutral-400"><span class="h-2 w-2 rounded-full bg-red-400"></span>Log to Sheet</div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- Tech stack -->
+  <section class="border-t border-neutral-900">
+    <div class="max-w-6xl mx-auto px-6 py-20">
+      <p class="text-sm uppercase tracking-widest text-neutral-500">Stack</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">All free tiers, no vendor lock-in.</h2>
+      <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="rounded-xl border border-neutral-900 bg-neutral-950 p-5">
+          <div class="text-sm text-neutral-500">Orchestration</div>
+          <div class="mt-1 font-semibold">n8n (self-hosted)</div>
+          <p class="mt-2 text-sm text-neutral-400">Docker container on localhost. Cloudflare Tunnel exposes it publicly at n8n.sepehr.homes.</p>
+        </div>
+        <div class="rounded-xl border border-neutral-900 bg-neutral-950 p-5">
+          <div class="text-sm text-neutral-500">LLM</div>
+          <div class="mt-1 font-semibold">Google Gemini 2.5 Flash</div>
+          <p class="mt-2 text-sm text-neutral-400">Shared by Research Agent and Email Writer. 250 requests/day free.</p>
+        </div>
+        <div class="rounded-xl border border-neutral-900 bg-neutral-950 p-5">
+          <div class="text-sm text-neutral-500">Email</div>
+          <div class="mt-1 font-semibold">Gmail SMTP</div>
+          <p class="mt-2 text-sm text-neutral-400">Plain text only. App Password authentication. 500 emails/day free. DKIM signed by Google.</p>
+        </div>
+        <div class="rounded-xl border border-neutral-900 bg-neutral-950 p-5">
+          <div class="text-sm text-neutral-500">Storage</div>
+          <div class="mt-1 font-semibold">Google Sheets + Apps Script</div>
+          <p class="mt-2 text-sm text-neutral-400">Apps Script web app receives POSTs from n8n and appends rows to the outreach log.</p>
+        </div>
+        <div class="rounded-xl border border-neutral-900 bg-neutral-950 p-5">
+          <div class="text-sm text-neutral-500">Hosting</div>
+          <div class="mt-1 font-semibold">Vercel / GitLab Pages</div>
+          <p class="mt-2 text-sm text-neutral-400">Static HTML. Deployed on every push to GitLab. No build step.</p>
+        </div>
+        <div class="rounded-xl border border-neutral-900 bg-neutral-950 p-5">
+          <div class="text-sm text-neutral-500">Tunnel</div>
+          <div class="mt-1 font-semibold">Cloudflare Tunnel</div>
+          <p class="mt-2 text-sm text-neutral-400">Exposes local n8n to the internet permanently. Free. No port forwarding needed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- Sample output -->
+  <section id="sample" class="border-t border-neutral-900">
+    <div class="max-w-6xl mx-auto px-6 py-20">
+      <p class="text-sm uppercase tracking-widest text-neutral-500">Sample output</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">What a generated email looks like.</h2>
+      <p class="mt-4 text-neutral-400 max-w-2xl">Two short paragraphs. One concrete observation about the company. One specific reason I'm writing. One low-pressure closing line. No marketing language, no exclamation marks.</p>
+      <div class="mt-10 rounded-xl border border-neutral-900 bg-neutral-950 overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-neutral-900 text-xs text-neutral-500">
+          <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+          <span class="ml-3 mono">Sample · Generated email draft</span>
+        </div>
+        <div class="p-6 space-y-4 text-sm">
+          <div class="grid grid-cols-[80px_1fr] gap-3 text-neutral-400">
+            <div>To</div><div class="text-neutral-200">hovig@conceptstudio.am</div>
+            <div>Subject</div><div class="text-neutral-200">Dev support for your Yerevan client work</div>
+          </div>
+          <hr class="border-neutral-900" />
+          <div class="text-neutral-200 leading-relaxed whitespace-pre-line">Hi Hovig,
+ 
+Saw the Nova Hotel project on Behance, the way the layout holds together across every touchpoint is the kind of attention to detail that's hard to build for if your developer doesn't understand the design intent. I'm Sepehr, a full-stack developer based here in Yerevan, working with design studios on a white-label basis, fixed price, clean code, your client never knows I'm involved.
+ 
+Some of my recent work is at sep-web.pages.dev if you want a quick look. If a build lands on your desk and your team doesn't have the bandwidth, I'd like to be the first email you send.
+ 
+Best,
+Sepehr</div>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       TRY IT — three-step inline flow
+  ════════════════════════════════════════════════════════════════════════ -->
+  <section id="try" class="border-t border-neutral-900">
+    <div class="max-w-3xl mx-auto px-6 py-20">
+      <p class="text-sm uppercase tracking-widest text-neutral-500">Try it</p>
+      <h2 class="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">Submit a lead.</h2>
+      <p class="mt-4 text-neutral-400">The workflow runs, generates a personalised email draft, and shows it here for you to review and edit before sending.</p>
+ 
+      <!-- Step indicator -->
+      <div class="mt-10 flex items-center gap-3 mb-8" id="stepIndicator">
+        <div class="step-dot flex items-center gap-2 text-sm" data-step="1">
+          <span class="h-6 w-6 rounded-full bg-white text-neutral-950 flex items-center justify-center text-xs font-semibold step-circle-1">1</span>
+          <span class="text-neutral-200 font-medium">Submit</span>
+        </div>
+        <div class="flex-1 h-px bg-neutral-800"></div>
+        <div class="step-dot flex items-center gap-2 text-sm" data-step="2">
+          <span class="h-6 w-6 rounded-full bg-neutral-800 text-neutral-500 flex items-center justify-center text-xs font-semibold step-circle-2">2</span>
+          <span class="text-neutral-500 step-label-2">Review</span>
+        </div>
+        <div class="flex-1 h-px bg-neutral-800"></div>
+        <div class="step-dot flex items-center gap-2 text-sm" data-step="3">
+          <span class="h-6 w-6 rounded-full bg-neutral-800 text-neutral-500 flex items-center justify-center text-xs font-semibold step-circle-3">3</span>
+          <span class="text-neutral-500 step-label-3">Sent</span>
+        </div>
+      </div>
+ 
+      <!-- ── STEP 1: Input form ──────────────────────────────────────────── -->
+      <div id="step1" class="step-panel active">
+        <form id="leadForm" class="space-y-5">
+          <div>
+            <label class="block text-sm font-medium text-neutral-300">Company name <span class="text-red-400">*</span></label>
+            <input id="companyName" name="Company Name" type="text" required
+                   class="mt-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition"
+                   placeholder="PRIME IT" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-neutral-300">Website URL <span class="text-red-400">*</span></label>
+            <input id="website" name="Website URL" type="text" required
+                   class="mt-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition"
+                   placeholder="prime-it.am" />
+          </div>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div>
+              <label class="block text-sm font-medium text-neutral-300">Contact name</label>
+              <input id="contactName" name="Contact Name" type="text"
+                     class="mt-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition"
+                     placeholder="Hovig" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-neutral-300">Contact role</label>
+              <input id="contactRole" name="Contact Role" type="text"
+                     class="mt-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition"
+                     placeholder="Founder" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-neutral-300">Contact email</label>
+            <input id="contactEmail" name="Contact Email" type="email"
+                   class="mt-2 w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition"
+                   placeholder="hovig@studio.com" />
+          </div>
+ 
+          <button type="submit" id="submitBtn"
+                  class="inline-flex items-center justify-center gap-2 w-full rounded-md bg-white text-neutral-950 px-5 py-3 font-medium hover:bg-neutral-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            <span id="submitText">Generate email draft</span>
+            <svg id="submitSpinner" class="hidden h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
+              <path d="M22 12a10 10 0 01-10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div id="step1Error" class="hidden rounded-md border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-300"></div>
+        </form>
+ 
+        <!-- Processing status -->
+        <div id="processingStatus" class="hidden mt-6 rounded-xl border border-neutral-800 bg-neutral-900 p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <svg class="h-5 w-5 animate-spin text-emerald-400 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+              <path d="M22 12a10 10 0 01-10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span class="text-sm font-medium text-neutral-200">Generating email draft...</span>
+          </div>
+          <div class="space-y-2" id="statusSteps">
+            <div class="flex items-center gap-2 text-xs text-neutral-500" id="st1">
+              <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0"></span>
+              Scraping company website
+            </div>
+            <div class="flex items-center gap-2 text-xs text-neutral-600" id="st2">
+              <span class="h-1.5 w-1.5 rounded-full bg-neutral-700 flex-shrink-0"></span>
+              Running research agent
+            </div>
+            <div class="flex items-center gap-2 text-xs text-neutral-600" id="st3">
+              <span class="h-1.5 w-1.5 rounded-full bg-neutral-700 flex-shrink-0"></span>
+              Writing personalised email
+            </div>
+            <div class="flex items-center gap-2 text-xs text-neutral-600" id="st4">
+              <span class="h-1.5 w-1.5 rounded-full bg-neutral-700 flex-shrink-0"></span>
+              Formatting output
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- ── STEP 2: Review form ─────────────────────────────────────────── -->
+      <div id="step2" class="step-panel">
+        <div class="slide-in">
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h3 class="text-lg font-semibold text-neutral-100">Review the email draft</h3>
+              <p class="text-sm text-neutral-400 mt-1">Edit any field below before sending.</p>
+            </div>
+            <button onclick="resetToStep1()" class="text-xs text-neutral-500 hover:text-neutral-300 transition underline underline-offset-2">Start over</button>
+          </div>
+ 
+          <!-- Company badge -->
+          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs text-neutral-400">
+            <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+            Generated for: <span id="reviewCompany" class="text-neutral-200 ml-1"></span>
+          </div>
+ 
+          <form id="reviewForm" class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-neutral-500 uppercase tracking-widest mb-2">To</label>
+              <input id="reviewTo" type="email"
+                     class="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-neutral-500 uppercase tracking-widest mb-2">Subject</label>
+              <input id="reviewSubject" type="text"
+                     class="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-neutral-500 uppercase tracking-widest mb-2">Email body</label>
+              <textarea id="reviewBody" rows="10"
+                        class="w-full rounded-md bg-neutral-900 border border-neutral-800 px-3 py-2.5 text-neutral-100 placeholder-neutral-600 focus:border-neutral-600 transition text-sm font-mono leading-relaxed"></textarea>
+            </div>
+ 
+            <!-- Word count -->
+            <div class="flex items-center justify-between text-xs text-neutral-600">
+              <span>Word count: <span id="wordCount" class="text-neutral-400">0</span></span>
+              <span id="wordCountWarning" class="hidden text-amber-400">Over 130 words — consider trimming</span>
+            </div>
+ 
+            <div class="flex gap-3 pt-2">
+              <button type="submit" id="sendBtn"
+                      class="flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-white text-neutral-950 px-5 py-3 font-medium hover:bg-neutral-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                <span id="sendText">Send email</span>
+                <svg id="sendSpinner" class="hidden h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity="0.25"/>
+                  <path d="M22 12a10 10 0 01-10 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <button type="button" onclick="copyDraft()"
+                      class="rounded-md border border-neutral-800 px-4 py-3 text-sm text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900 transition" id="copyBtn">
+                Copy
+              </button>
+            </div>
+            <div id="step2Error" class="hidden rounded-md border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-300"></div>
+          </form>
+        </div>
+      </div>
+ 
+      <!-- ── STEP 3: Success ────────────────────────────────────────────── -->
+      <div id="step3" class="step-panel">
+        <div class="slide-in text-center py-10">
+          <div class="flex justify-center mb-6">
+            <div class="h-16 w-16 rounded-full bg-emerald-950 border border-emerald-800 flex items-center justify-center">
+              <svg class="h-8 w-8 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-2xl font-semibold text-neutral-100 mb-2">Email sent</h3>
+          <p class="text-neutral-400 text-sm mb-2">Logged to Google Sheets automatically.</p>
+          <p class="text-neutral-500 text-xs mb-8">Sent to: <span id="sentTo" class="text-neutral-400"></span></p>
+          <button onclick="resetToStep1()"
+                  class="inline-flex items-center gap-2 rounded-md bg-white text-neutral-950 px-5 py-3 font-medium hover:bg-neutral-200 transition">
+            Send another
+          </button>
+        </div>
+      </div>
+ 
+      <details class="mt-10 rounded-xl border border-neutral-900 bg-neutral-950 p-5 text-sm text-neutral-400">
+        <summary class="cursor-pointer text-neutral-200 font-medium">How does this work?</summary>
+        <div class="mt-3 space-y-2">
+          <p>When you submit the form:</p>
+          <ol class="list-decimal pl-5 space-y-1">
+            <li>Data is sent to n8n via Cloudflare Tunnel</li>
+            <li>n8n scrapes the company website and extracts text</li>
+            <li>Research Agent analyses the content (Gemini)</li>
+            <li>Email Writer creates a personalised draft (Gemini)</li>
+            <li>The draft is returned as JSON to this page</li>
+            <li>You review and edit inline — no redirect</li>
+            <li>On confirm, a second webhook sends the email via Gmail SMTP</li>
+            <li>Everything is logged to Google Sheets</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+  </section>
+ 
+  <!-- Footer -->
+  <footer class="border-t border-neutral-900">
+    <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
+      <div>Built by Sepehr Jokanian · Yerevan, Armenia</div>
+      <div class="flex items-center gap-5">
+        <a href="https://sep-web.pages.dev" target="_blank" rel="noopener" class="hover:text-neutral-200 transition">sep-web.pages.dev</a>
+        <a href="https://gitlab.com/sepehrj-group/sepehrj-project" target="_blank" rel="noopener" class="hover:text-neutral-200 transition">Source ↗</a>
+      </div>
+    </div>
+  </footer>
+ 
+  <script src="/config.js"></script>
+  <script>
+    // ── Mermaid ──────────────────────────────────────────────────────────
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        background: 'transparent',
+        primaryColor: '#171717',
+        primaryTextColor: '#e5e5e5',
+        primaryBorderColor: '#404040',
+        lineColor: '#525252',
+        secondaryColor: '#262626',
+        tertiaryColor: '#171717',
+        fontFamily: 'Inter, system-ui, sans-serif',
+      },
+    });
+ 
+    // ── State ─────────────────────────────────────────────────────────────
+    let draftData = {};
+ 
+    // ── Step management ───────────────────────────────────────────────────
+    function goToStep(n) {
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
+ 
+      // Update step circles
+      for (let i = 1; i <= 3; i++) {
+        const circle = document.querySelector('.step-circle-' + i);
+        const label  = document.querySelector('.step-label-' + i);
+        if (i < n) {
+          circle.classList.remove('bg-white','text-neutral-950','bg-neutral-800','text-neutral-500');
+          circle.classList.add('bg-emerald-500','text-white');
+          circle.textContent = '✓';
+          if (label) { label.classList.remove('text-neutral-500'); label.classList.add('text-neutral-200'); }
+        } else if (i === n) {
+          circle.classList.remove('bg-neutral-800','text-neutral-500','bg-emerald-500','text-white');
+          circle.classList.add('bg-white','text-neutral-950');
+          circle.textContent = i;
+          if (label) { label.classList.remove('text-neutral-500'); label.classList.add('text-neutral-200'); }
+        } else {
+          circle.classList.remove('bg-white','text-neutral-950','bg-emerald-500','text-white');
+          circle.classList.add('bg-neutral-800','text-neutral-500');
+          circle.textContent = i;
+          if (label) { label.classList.add('text-neutral-500'); label.classList.remove('text-neutral-200'); }
+        }
+      }
+ 
+      // Scroll to try section
+      if (n > 1) document.getElementById('try').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+ 
+    function resetToStep1() {
+      document.getElementById('leadForm').reset();
+      document.getElementById('step1Error').classList.add('hidden');
+      document.getElementById('processingStatus').classList.add('hidden');
+      draftData = {};
+      goToStep(1);
+    }
+ 
+    // ── Processing status animation ───────────────────────────────────────
+    let statusInterval = null;
+    function startStatusAnimation() {
+      const steps = ['st1','st2','st3','st4'];
+      let current = 0;
+      const timings = [4000, 8000, 6000, 3000];
+ 
+      function activateStep(i) {
+        steps.forEach((id, idx) => {
+          const el = document.getElementById(id);
+          const dot = el.querySelector('span');
+          if (idx < i) {
+            dot.className = 'h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0';
+            el.classList.remove('text-neutral-600'); el.classList.add('text-neutral-400');
+          } else if (idx === i) {
+            dot.className = 'pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0';
+            el.classList.remove('text-neutral-600'); el.classList.add('text-neutral-500');
+          } else {
+            dot.className = 'h-1.5 w-1.5 rounded-full bg-neutral-700 flex-shrink-0';
+            el.classList.add('text-neutral-600'); el.classList.remove('text-neutral-400','text-neutral-500');
+          }
+        });
+      }
+ 
+      activateStep(0);
+      let t = 0;
+      statusInterval = setInterval(() => {
+        current = Math.min(current + 1, steps.length - 1);
+        activateStep(current);
+      }, timings[t++] || 4000);
+    }
+ 
+    function stopStatusAnimation() {
+      clearInterval(statusInterval);
+      // Mark all green
+      ['st1','st2','st3','st4'].forEach(id => {
+        const el = document.getElementById(id);
+        const dot = el.querySelector('span');
+        dot.className = 'h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0';
+        el.classList.remove('text-neutral-600','text-neutral-500');
+        el.classList.add('text-neutral-400');
+      });
+    }
+ 
+    // ── Word count ────────────────────────────────────────────────────────
+    document.getElementById('reviewBody').addEventListener('input', function() {
+      const words = this.value.trim().split(/\s+/).filter(Boolean).length;
+      document.getElementById('wordCount').textContent = words;
+      document.getElementById('wordCountWarning').classList.toggle('hidden', words <= 130);
+    });
+ 
+    // ── Copy draft ────────────────────────────────────────────────────────
+    function copyDraft() {
+      const subject = document.getElementById('reviewSubject').value;
+      const body    = document.getElementById('reviewBody').value;
+      const text    = `Subject: ${subject}\n\n${body}`;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        btn.textContent = 'Copied';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    }
+ 
+    // ── STEP 1: Submit lead form ──────────────────────────────────────────
+    document.getElementById('leadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+ 
+      const webhookUrl = window.WEBHOOK_URL;
+      if (!webhookUrl || webhookUrl.includes('YOUR-N8N-HOST')) {
+        const err = document.getElementById('step1Error');
+        err.textContent = 'Webhook not configured. Set WEBHOOK_URL in config.js.';
+        err.classList.remove('hidden');
+        return;
+      }
+ 
+      // Build payload
+      const payload = {
+        'Company Name':  document.getElementById('companyName').value.trim(),
+        'Website URL':   document.getElementById('website').value.trim(),
+        'Contact Name':  document.getElementById('contactName').value.trim(),
+        'Contact Role':  document.getElementById('contactRole').value.trim(),
+        'Contact Email': document.getElementById('contactEmail').value.trim(),
+      };
+ 
+      // UI: loading
+      const submitBtn  = document.getElementById('submitBtn');
+      const submitText = document.getElementById('submitText');
+      const spinner    = document.getElementById('submitSpinner');
+      const errBox     = document.getElementById('step1Error');
+      const statusBox  = document.getElementById('processingStatus');
+ 
+      submitBtn.disabled = true;
+      submitText.textContent = 'Generating...';
+      spinner.classList.remove('hidden');
+      errBox.classList.add('hidden');
+      statusBox.classList.remove('hidden');
+      startStatusAnimation();
+ 
+      try {
+        const res = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+ 
+        // Parse response body regardless of status
+        let data;
+        try { data = await res.json(); } catch (_) { data = {}; }
+ 
+        if (!res.ok) {
+          // n8n returned a structured error (e.g. 422 from our failure branch)
+          const msg = data.message || ('n8n responded with HTTP ' + res.status);
+          throw new Error(msg);
+        }
+ 
+        stopStatusAnimation();
+ 
+        if (!data.email_body && !data.subject_line) {
+          throw new Error('Workflow returned an empty draft. The website may have been unscrapable — try adding a different URL.');
+        }
+ 
+        // Store draft data
+        draftData = data;
+ 
+        // Populate review form
+        document.getElementById('reviewCompany').textContent  = payload['Company Name'];
+        document.getElementById('reviewTo').value             = data.contact_email || payload['Contact Email'] || '';
+        document.getElementById('reviewSubject').value        = data.subject_line  || '';
+        document.getElementById('reviewBody').value           = data.email_body    || '';
+ 
+        // Trigger word count
+        const wc = (data.email_body || '').trim().split(/\s+/).filter(Boolean).length;
+        document.getElementById('wordCount').textContent = wc;
+        document.getElementById('wordCountWarning').classList.toggle('hidden', wc <= 130);
+ 
+        goToStep(2);
+ 
+      } catch (err) {
+        stopStatusAnimation();
+        statusBox.classList.add('hidden');
+        // Friendly message for CORS / network failures
+        const isCors = err instanceof TypeError && err.message === 'Failed to fetch';
+        errBox.textContent = isCors
+          ? 'Could not reach n8n — check that n8n is running and the Cloudflare Tunnel is active.'
+          : 'Error: ' + err.message;
+        errBox.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Generate email draft';
+        spinner.classList.add('hidden');
+      }
+    });
+ 
+    // ── STEP 2: Send confirmed email ──────────────────────────────────────
+    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+ 
+      const sendUrl = window.SEND_EMAIL_URL;
+      if (!sendUrl || sendUrl.includes('YOUR-N8N-HOST')) {
+        const err = document.getElementById('step2Error');
+        err.textContent = 'Send URL not configured. Set SEND_EMAIL_URL in config.js.';
+        err.classList.remove('hidden');
+        return;
+      }
+ 
+      const toEmail    = document.getElementById('reviewTo').value.trim();
+      const subject    = document.getElementById('reviewSubject').value.trim();
+      const emailBody  = document.getElementById('reviewBody').value.trim();
+ 
+      if (!toEmail) {
+        const err = document.getElementById('step2Error');
+        err.textContent = 'Please enter a recipient email address.';
+        err.classList.remove('hidden');
+        return;
+      }
+ 
+      const payload = {
+        to_email:     toEmail,
+        subject:      subject,
+        email_body:   emailBody,
+        company:      draftData.for_company || document.getElementById('reviewCompany').textContent,
+        contact_name: draftData.contact_name || '',
+        contact_role: draftData.contact_role || '',
+      };
+ 
+      const sendBtn  = document.getElementById('sendBtn');
+      const sendText = document.getElementById('sendText');
+      const sendSpinner = document.getElementById('sendSpinner');
+      const errBox   = document.getElementById('step2Error');
+ 
+      sendBtn.disabled = true;
+      sendText.textContent = 'Sending...';
+      sendSpinner.classList.remove('hidden');
+      errBox.classList.add('hidden');
+ 
+      try {
+        const res = await fetch(sendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+ 
+        if (!res.ok) throw new Error('Send webhook responded with HTTP ' + res.status);
+ 
+        document.getElementById('sentTo').textContent = toEmail;
+        goToStep(3);
+ 
+      } catch (err) {
+        errBox.textContent = 'Error sending: ' + err.message;
+        errBox.classList.remove('hidden');
+      } finally {
+        sendBtn.disabled = false;
+        sendText.textContent = 'Send email';
+        sendSpinner.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
